@@ -1,5 +1,7 @@
 import React, {useEffect} from 'react';
 import * as d3 from "d3";
+import {PageHeader} from "antd";
+import './App.css';
 
 function App() {
 
@@ -10,7 +12,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Radar System</h1>
+      <PageHeader title="Radar System"/>
       <article className="d3">
       </article>
     </div>
