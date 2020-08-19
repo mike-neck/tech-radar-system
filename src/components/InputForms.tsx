@@ -1,5 +1,5 @@
 import React, {ChangeEventHandler, ReactElement, useState} from "react";
-import {BasicColor, BasicColorCandidates, RectangleText} from "./Rectangle";
+import {BasicColor, BasicColorCandidates, FontSize, RectangleText} from "./Rectangle";
 
 class AxisBuilder implements Iterator<number>, Iterable<number> {
     max: number;
@@ -54,6 +54,7 @@ const allSelectableWidth: SelectableWidth[] = [...allSelectableHeight, 210];
 
 export const MaxHorizontalAxis = 500
 
+const availableFontSize: FontSize[] = [11, 12, 13, 15, 18, 23, 31, 34];
 
 function Selector<T extends number>(param: { initialValue: T, candidates: T[], handler: OnChangeHandler<T> }): ReactElement {
     const [selector, setSelector] = useState<T>(param.initialValue);
@@ -98,7 +99,8 @@ export function InputForms(param: { onNewObject: (newObject: RectangleText) => v
         axis: {
             x: 0,
             y: 0
-        }
+        },
+        fontSize: 13,
     };
     const [object, setObject] = useState(initialObject);
 
@@ -152,6 +154,8 @@ export function InputForms(param: { onNewObject: (newObject: RectangleText) => v
             <div>
                 <label>テキスト</label>
                 <input type="text" onChange={event => update("text", event.target.value)} value={object.text}/>
+                <label>フォントサイズ</label>
+                <Selector<FontSize> initialValue={13} candidates={availableFontSize} handler={value => update("fontSize", value)}/>
             </div>
             <div>
                 <label>色</label>

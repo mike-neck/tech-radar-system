@@ -9,12 +9,15 @@ export interface Axis {
     y: number;
 }
 
+export type FontSize = 11 | 12 | 13 | 15 | 18 | 23 | 31 | 34;
+
 export interface RectangleText {
     text: string;
     width: number;
     height: number;
     color: BasicColor;
     axis: Axis;
+    fontSize: FontSize;
 }
 
 export type RectangleTexts = RectangleText[];
@@ -34,7 +37,7 @@ export const RectangleTexts: React.FC<{ items: RectangleTexts }> = ({ items }) =
         boxes.append("text")
             .attr("transform", datum => `translate(0, ${datum.height})`)
             .attr("fill", "white")
-            .style("font-size", datum => datum.width * 0.9)
+            .style("font-size", datum => datum.fontSize)
             .text(datum => datum.text);
     });
     // noinspection CheckTagEmptyBody
