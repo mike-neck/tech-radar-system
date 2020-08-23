@@ -18,6 +18,7 @@ import {
     Offset,
     quadrantLegendOffset
 } from "./offset";
+import {Cartesian, Polar, PolarRange, polarRange, Radius, Rect} from "./figure";
 
 type RadialUnit = -1 | -0.5 | 0 | 0.5 | 1;
 type FactorUnit = -1 | 1;
@@ -46,42 +47,12 @@ function quadrantAreas(quadrant: Quadrant): QuadrantArea {
 
 const MinimumRadius: Radius = 30;
 const DrawingAreaHalfWidth = 400;
-type Radius = number;
 const Rings: Map<TechAssessment, Range<Radius>> = new Map<TechAssessment, Range<Radius>>([
     [TechAssessment.Adopt, {min: MinimumRadius, max: 130}],
     [TechAssessment.Trial, {min: 130, max: 220}],
     [TechAssessment.Assess, {min: 220, max: 310}],
     [TechAssessment.Hold, {min: 310, max: DrawingAreaHalfWidth}],
 ]);
-
-type Cartesian = { x: number, y: number };
-type Polar = { radius: Radius, theta: number };
-type Rect = { leftTop: Cartesian, rightBottom: Cartesian };
-
-interface PolarRange {
-    minRadius(param: { adjust: Radius }): Radius;
-
-    maxRadius(param: { adjust: Radius }): Radius;
-
-    radiusRange(): Range<Radius>;
-
-    thetaRange(): Range<number>;
-}
-
-function polarRange(min: Polar, max: Polar): PolarRange {
-    return {
-        minRadius(param: { adjust: Radius } = {adjust: 0}): Radius {
-            return min.radius + param.adjust;
-        },
-        maxRadius(param: { adjust: Radius } = {adjust: 0}): Radius {
-            return max.radius + param.adjust;
-        }, radiusRange(): Range<Radius> {
-            return {max: max.radius, min: min.radius};
-        }, thetaRange(): Range<number> {
-            return {max: max.theta, min: min.theta};
-        }
-    };
-}
 
 const TitleOffset: Offset = {x: LeftEdge, y: -420};
 const FooterOffset: Offset = {x: 0, y: 0};
