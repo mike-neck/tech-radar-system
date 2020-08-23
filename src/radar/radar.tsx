@@ -20,6 +20,7 @@ import {
 } from "./offset";
 import {Cartesian, Polar, PolarRange, polarRange, Radius, Rect} from "./figure";
 import {Area} from "./area";
+import {translateArea, translateOffset} from "./transform-translate";
 
 type RadialUnit = -1 | -0.5 | 0 | 0.5 | 1;
 type FactorUnit = -1 | 1;
@@ -243,18 +244,6 @@ function newConfig(radarConfig: RadarConfig): Config {
 function model(technologies: Technology[]): EntryClassification<TechnologyWithIndex> {
     const grp = grouping(technologies);
     return sortingByNameGivingIndex(grp);
-}
-
-function translateArea(area: Area): string {
-    return `translate(${area.width},${area.height})`;
-}
-
-function translateCartesian(cartesian: Cartesian): string {
-    return `translate(${cartesian.x},${cartesian.y})`;
-}
-
-function translateOffset(offset: Offset): string {
-    return `translate(${offset.x},${offset.y})`;
 }
 
 export function Radar(params: { radarConfig: RadarConfig, technologies: Technology[] }): ReactElement {
