@@ -19,6 +19,7 @@ import {
     quadrantLegendOffset
 } from "./offset";
 import {Cartesian, Polar, PolarRange, polarRange, Radius, Rect} from "./figure";
+import {Area} from "./area";
 
 type RadialUnit = -1 | -0.5 | 0 | 0.5 | 1;
 type FactorUnit = -1 | 1;
@@ -182,11 +183,6 @@ function techColorsAsReadOnlyMap(techColors: TechColors): (assessment: TechAsses
                 return techColors.hold;
         }
     };
-}
-
-export interface Area {
-    width: number;
-    height: number;
 }
 
 export interface TechnologyClassNames {
