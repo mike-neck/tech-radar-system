@@ -18,7 +18,7 @@ import {
     Offset,
     quadrantLegendOffset
 } from "./offset";
-import {Cartesian, Polar, PolarRange, polarRange, Radius, Rect} from "./figure";
+import {Cartesian, Polar, PolarRange, polarRange, Radius, Rect} from "./figure-types";
 import {Area} from "./area";
 import {translateArea, translateOffset} from "./transform-translate";
 

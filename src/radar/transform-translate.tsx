@@ -1,5 +1,5 @@
 import {Area} from "./area";
-import {Cartesian} from "./figure";
+import {Cartesian} from "./figure-types";
 import {Offset} from "./offset";
 
 export function translateArea(area: Area): string {
