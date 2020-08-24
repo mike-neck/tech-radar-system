@@ -1,6 +1,6 @@
 import React, {ReactElement, useState} from "react";
 import {TechAssessment, techAssessmentAsString, techAssessments} from "./tech-assessment";
-import {orderedQuadrants, Quadrant, QuadrantAccess} from "./quadrant";
+import {orderedQuadrants, Quadrant} from "./quadrant";
 import {
     EntryClassification,
     grouping,
@@ -19,8 +19,8 @@ import {
     quadrantLegendOffset
 } from "./offset";
 import {Cartesian, Polar, PolarRange, polarRange, Radius, Rect} from "./figure-types";
-import {Area} from "./area";
 import {translateArea, translateOffset} from "./transform-translate";
+import {Colors, Config, newConfig, RadarConfig} from "./config";
 
 type RadialUnit = -1 | -0.5 | 0 | 0.5 | 1;
 type FactorUnit = -1 | 1;
@@ -152,91 +152,6 @@ function newSegment(quadrant: Quadrant, techAssessment: TechAssessment): Segment
                 theta: random.randomBetween(polarRange.thetaRange()),
             };
             return cartesian(polar);
-        }
-    };
-}
-
-export type TechColors = {
-    adopt: string;
-    assess: string;
-    trial: string;
-    hold: string;
-};
-
-export interface Colors {
-    background: string;
-    backingText: string;
-    grid: string;
-    inactive: string;
-    tech: TechColors;
-}
-
-function techColorsAsReadOnlyMap(techColors: TechColors): (assessment: TechAssessment) => string {
-    return (assessment: TechAssessment) => {
-        switch (assessment) {
-            case TechAssessment.Adopt:
-                return techColors.adopt;
-            case TechAssessment.Assess:
-                return techColors.assess;
-            case TechAssessment.Trial:
-                return techColors.trial;
-            case TechAssessment.Hold:
-                return techColors.hold;
-        }
-    };
-}
-
-export interface TechnologyClassNames {
-    leftTop: string;
-    rightTop: string;
-    leftBottom: string;
-    rightBottom: string;
-}
-
-function quadrantLegendTitle(technologyClassNames: TechnologyClassNames): (quadrant: Quadrant) => string {
-    return (quadrant: Quadrant) => {
-        switch (quadrant) {
-            case Quadrant.First: return technologyClassNames.rightTop;
-            case Quadrant.Second: return technologyClassNames.leftTop;
-            case Quadrant.Third: return technologyClassNames.leftBottom;
-            case Quadrant.Fourth: return technologyClassNames.rightBottom;
-        }
-    };
-}
-
-export interface RadarConfig {
-    title: string;
-    names: TechnologyClassNames;
-    colors: Colors;
-    printLayout: boolean;
-    area: Area;
-}
-
-interface Config {
-    title: string;
-    colors: Colors;
-    printLayout: boolean;
-    area: Area;
-    color(technology: Technology): string;
-    quadrantTitles: QuadrantAccess<string>;
-}
-
-function newConfig(radarConfig: RadarConfig): Config {
-    const techColor = techColorsAsReadOnlyMap(radarConfig.colors.tech);
-    return {
-        ...radarConfig,
-        color(technology: Technology): string {
-            if (technology.active || radarConfig.printLayout) {
-                return techColor(technology.assessment);
-            } else {
-                return radarConfig.colors.inactive;
-            }
-        },
-        quadrantTitles: {
-            getByQuadrant(quadrant: Quadrant): string {
-                const titleOf = quadrantLegendTitle(radarConfig.names);
-                return titleOf(quadrant);
-            }
         }
     };
 }
