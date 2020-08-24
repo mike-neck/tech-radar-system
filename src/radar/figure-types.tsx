@@ -1,9 +1,10 @@
 import {Range} from "./random";
 
-export type Radius = number;
-export type Cartesian = { x: number, y: number };
 export type Rect = { leftTop: Cartesian, rightBottom: Cartesian };
 
+export type Cartesian = { x: number, y: number };
+
+export type Radius = number;
 export type Polar = { radius: Radius, theta: number };
 
 export interface PolarRange {
@@ -35,5 +36,12 @@ export function polar(cartesian: Cartesian): Polar {
     return {
         theta: Math.atan2(cartesian.y, cartesian.x),
         radius: Math.sqrt(cartesian.x * cartesian.x + cartesian.y * cartesian.y),
+    };
+}
+
+export function cartesian(polar: Polar): Cartesian {
+    return {
+        x: polar.radius * Math.cos(polar.theta),
+        y: polar.radius * Math.sin(polar.theta),
     };
 }
