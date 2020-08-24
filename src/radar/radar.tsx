@@ -10,7 +10,7 @@ import {
 } from "./entry-classification";
 import {Random, Range} from "./random";
 import {LeftEdge, Offset} from "./offset";
-import {Cartesian, Polar, PolarRange, polarRange, Radius, Rect} from "./figure-types";
+import {Cartesian, polar, Polar, PolarRange, polarRange, Radius, Rect} from "./figure-types";
 import {translateArea, translateOffset} from "./transform-translate";
 import {Colors, Config, newConfig, RadarConfig} from "./config";
 import {Legend} from "./legend";
@@ -51,13 +51,6 @@ const Rings: Map<TechAssessment, Range<Radius>> = new Map<TechAssessment, Range<
 
 const TitleOffset: Offset = {x: LeftEdge, y: -420};
 const FooterOffset: Offset = {x: 0, y: 0};
-
-function polar(cartesian: Cartesian): Polar {
-    return {
-        theta: Math.atan2(cartesian.y, cartesian.x),
-        radius: Math.sqrt(cartesian.x * cartesian.x + cartesian.y * cartesian.y),
-    };
-}
 
 function cartesian(polar: Polar): Cartesian {
     return {
