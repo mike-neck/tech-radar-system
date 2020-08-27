@@ -89,7 +89,7 @@ function newPolarRange(quadrant: Quadrant, techAssessment: TechAssessment): Pola
     );
 }
 
-function newRect(quadrant: Quadrant, techAssessment: TechAssessment): Rect {
+function newRect(quadrant: Quadrant): Rect {
     const area = quadrantArea(quadrant);
     return {
         leftTop: {
@@ -111,7 +111,7 @@ interface Segment {
 
 function newSegment(quadrant: Quadrant, techAssessment: TechAssessment): Segment {
     const polarRange: PolarRange = newPolarRange(quadrant, techAssessment);
-    const rect: Rect = newRect(quadrant, techAssessment);
+    const rect: Rect = newRect(quadrant);
     return {
         clip(cart: Cartesian): Cartesian {
             const boundedCart = boundedInRect(rect)(cart);
