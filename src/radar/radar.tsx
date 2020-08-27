@@ -28,10 +28,10 @@ interface QuadrantArea {
 }
 
 const Quadrants: Map<Quadrant, QuadrantArea> = new Map([
-    [Quadrant.First, {minRadial: 0, maxRadial: 0.5, factorX: 1, factorY: 1}],
-    [Quadrant.Second, {minRadial: 0.5, maxRadial: 1, factorX: -1, factorY: 1}],
-    [Quadrant.Third, {minRadial: -1, maxRadial: -0.5, factorX: -1, factorY: -1}],
-    [Quadrant.Fourth, {minRadial: -0.5, maxRadial: 0, factorX: 1, factorY: -1}],
+    [Quadrant.First, {minRadial: 0, maxRadial: 0.5, factorX: 1, factorY: -1}],
+    [Quadrant.Second, {minRadial: 0.5, maxRadial: 1, factorX: -1, factorY: -1}],
+    [Quadrant.Third, {minRadial: -1, maxRadial: -0.5, factorX: -1, factorY: 1}],
+    [Quadrant.Fourth, {minRadial: -0.5, maxRadial: 0, factorX: 1, factorY: 1}],
 ]);
 
 function quadrantArea(quadrant: Quadrant): QuadrantArea {
@@ -52,7 +52,7 @@ const Rings: Map<TechAssessment, Range<Radius>> = new Map<TechAssessment, Range<
 ]);
 
 const TitleOffset: Offset = {x: LeftEdge, y: -420};
-const FooterOffset: Offset = {x: 0, y: 0};
+const FooterOffset: Offset = {x: LeftEdge, y: 420};
 
 function boundedIn<N extends number>(range: Range<N>): (value: N) => N {
     const low = Math.min(range.min, range.max) as N;
@@ -243,6 +243,7 @@ function UnitRings(params: { config: Config, techAssessment: TechAssessment }): 
                 //@ts-ignore
                 <text
                    textAnchor="middle"
+                   y={ -radius.max + 62 }
                    fill={params.config.colors.backingText}
                    fontFamily="Arial, Menlo, Helvetica"
                    fontSize="42"
