@@ -170,7 +170,7 @@ function Figure(params: { config: Config, entries: EntryClassification<Technolog
     // add legend for items
     const legend = (<Legend config={params.config} entries={params.entries}/>);
     // add bubble(tooltip/handler)
-    const bubble = <><Bubble label={null}/></>;
+    const bubble = (<Bubble label={null}/>);
     // add rink(plots = blips)
     return (
         <g>
