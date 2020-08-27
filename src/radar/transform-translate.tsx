@@ -6,7 +6,7 @@ export function translateArea(area: Area): string {
     return `translate(${area.width},${area.height})`;
 }
 
-function translateCartesian(cartesian: Cartesian): string {
+export function translateCartesian(cartesian: Cartesian): string {
     return `translate(${cartesian.x},${cartesian.y})`;
 }
 

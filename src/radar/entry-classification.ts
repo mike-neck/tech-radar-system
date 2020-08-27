@@ -1,11 +1,18 @@
 import {Quadrant, QuadrantAccess} from "./quadrant";
 import {TechAssessment} from "./tech-assessment";
 
+export enum Trend {
+    UP,
+    KEEP,
+    DOWN,
+}
+
 export interface Technology {
     name: string;
     active: boolean;
     assessment: TechAssessment;
     quadrant: Quadrant;
+    move: Trend;
 }
 
 export interface TechnologyWithIndex extends Technology {

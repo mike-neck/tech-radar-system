@@ -6,12 +6,13 @@ import {
     grouping,
     sortingByNameGivingIndex,
     Technology,
-    TechnologyWithIndex
+    TechnologyWithIndex,
+    Trend
 } from "./entry-classification";
 import {Random, Range} from "./random";
 import {LeftEdge, Offset} from "./offset";
 import {cartesian, Cartesian, polar, Polar, PolarRange, polarRange, Radius, Rect} from "./figure-types";
-import {translateArea, translateOffset} from "./transform-translate";
+import {translateArea, translateCartesian, translateOffset} from "./transform-translate";
 import {Colors, Config, newConfig, RadarConfig} from "./config";
 import {Legend} from "./legend";
 import {Bubble} from "./bubble";
@@ -172,6 +173,7 @@ function Figure(params: { config: Config, entries: EntryClassification<Technolog
     // add bubble(tooltip/handler)
     const bubble = (<Bubble label={null}/>);
     // add rink(plots = blips)
+    const blips = (<Blips config={params.config} entries={params.entries}/>);
     return (
         <g>
             { grid }
@@ -179,6 +181,7 @@ function Figure(params: { config: Config, entries: EntryClassification<Technolog
             { guide }
             { legend }
             { bubble }
+            { blips }
         </g>
     );
 }
@@ -283,3 +286,64 @@ const Guide: React.FC = () => (
     >▲ moved up     ▼ moved down</text>
 );
 
+function Blips(params: { config: Config, entries: EntryClassification<TechnologyWithIndex> }): ReactElement {
+    const config = params.config;
+    const entries = params.entries;
+
+    return (
+        <g>
+            { entries.mapAsArray(item => {
+                return (<Blip key={item.index} config={config} tech={item}/>);
+            }) }
+        </g>
+    );
+}
+
+function Blip(params: { config: Config, tech: TechnologyWithIndex }): ReactElement {
+    const config = params.config;
+    const tech = params.tech;
+    const segment = newSegment(tech.quadrant, tech.assessment);
+    const random = segment.random();
+    const cart = segment.clip(random);
+
+    return (
+        <g transform={ translateCartesian(cart) }>
+            <BlipShape config={config} tech={tech}/>
+            <BlipText config={config} tech={tech}/>
+        </g>
+    );
+}
+
+function BlipShape(params: { config: Config, tech: TechnologyWithIndex }): ReactElement {
+    const config = params.config;
+    const tech = params.tech;
+    const color = config.color(tech);
+    switch (tech.move) {
+        case Trend.UP:
+            return (<path d="M -11,5 11,5 0,-13 z" fill={color}/>);
+        case Trend.DOWN:
+            return (<path d="M -11,-5 11,-5 0,13 z" fill={color}/>);
+        case Trend.KEEP:
+            return (<circle r={9} fill={color}/>);
+    }
+}
+
+function BlipText(params: { config: Config, tech: TechnologyWithIndex }): ReactElement | null {
+    const config = params.config;
+    const tech = params.tech;
+    if (tech.active || config.printLayout) {
+        const fontSize = tech.index.length < 2 ? 8 : 9;
+        // noinspection HtmlUnknownAttribute
+        return (
+            <text
+                y={3}
+                fill="#fff"
+                style={{ fontFamily: "Arial, Menlo, Helvetica", fontSize:  fontSize }}
+                pointerEvents="none"
+                user-select="none"
+            >{ tech.index }</text>
+        );
+    } else {
+        return null;
+    }
+}
