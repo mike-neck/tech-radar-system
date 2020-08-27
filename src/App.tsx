@@ -14,8 +14,8 @@ function App() {
             height: 1000, width: 1450,
         },
         colors: {
-            background: "#eee",
-            backingText: "#8fc6c7",
+            background: "#fff",
+            backingText: "#b4b7bb",
             grid: "#5f6068",
             inactive: "#30284c",
             tech: {
