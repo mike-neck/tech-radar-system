@@ -3,7 +3,6 @@ import {EntryClassification, Technology, TechnologyWithIndex, Trend} from "./ent
 import {Cartesian} from "./figure-types";
 import React, {ReactElement} from "react";
 import {translateCartesian} from "./transform-translate";
-import {Simulate} from "react-dom/test-utils";
 
 
 export function Blips(
