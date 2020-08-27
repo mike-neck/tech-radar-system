@@ -39,6 +39,9 @@ function App() {
         {active: true, assessment: TechAssessment.Adopt, move: Trend.UP, name: "Kotlin", quadrant: Quadrant.Second},
         {active: true, assessment: TechAssessment.Trial, move: Trend.KEEP, name: "Rust", quadrant: Quadrant.Second},
         {active: true, assessment: TechAssessment.Assess, move: Trend.DOWN, name: "KPT", quadrant: Quadrant.First},
+        {active: true, assessment: TechAssessment.Hold, move: Trend.DOWN, name: "Reactor", quadrant: Quadrant.Fourth},
+        {active: true, assessment: TechAssessment.Adopt, move: Trend.KEEP, name: "terraform", quadrant: Quadrant.Third},
+        {active: true, assessment: TechAssessment.Adopt, move: Trend.UP, name: "JUnit Jupiter", quadrant: Quadrant.Fourth},
     ];
 
   return (
