@@ -263,7 +263,7 @@ function AllRings(params: { config: Config }): ReactElement {
     return (
         <>
             { assessments.map((assessment) =>
-                (<UnitRings config={params.config} techAssessment={assessment}/>)
+                (<UnitRings key={ `ring-${assessment}` } config={params.config} techAssessment={assessment}/>)
             ) }
         </>
     );

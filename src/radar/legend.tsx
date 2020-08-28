@@ -88,6 +88,7 @@ function ItemNames(params: {
         params.entries
             .mapAsArray((item, allIndex, indexInQuadrants, indexInAssessments) =>
                 (<ItemName
+                    key={ `item-legend-${item.quadrant}-${item.assessment}` }
                     item={item}
                     indexInAssessments={indexInAssessments}
                     legendTransform={params.legendTransform}
