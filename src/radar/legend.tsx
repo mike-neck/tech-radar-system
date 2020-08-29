@@ -9,11 +9,11 @@ import {
     quadrantLegendOffset
 } from "./offset";
 import React, {ReactElement, useState} from "react";
-import {EntryClassification, TechnologyWithIndex} from "./entry-classification";
+import {EntryClassification, ViewableTech} from "./entry-classification";
 import {Config} from "./config";
 import {translateOffset} from "./transform-translate";
 
-export function Legend(params: { config: Config, entries: EntryClassification<TechnologyWithIndex> }): ReactElement {
+export function Legend(params: { config: Config, entries: EntryClassification<ViewableTech> }): ReactElement {
     const config = params.config;
     const entries = params.entries;
 
@@ -80,7 +80,7 @@ function TechAssessmentTitle(params: {
 }
 
 function ItemNames(params: {
-    entries: EntryClassification<TechnologyWithIndex>,
+    entries: EntryClassification<ViewableTech>,
     legendTransform: (quadrant: Quadrant, assessment: TechAssessment, vertical: LegendVerticalOffset) => string,
     verticalOffset: (quadrant: Quadrant, assessment: TechAssessment) => LegendVerticalOffsetConfig,
 }): ReactElement {
@@ -97,7 +97,7 @@ function ItemNames(params: {
 }
 
 function ItemName(params: {
-    item: TechnologyWithIndex,
+    item: ViewableTech,
     indexInAssessments: number,
     legendTransform: (quadrant: Quadrant, assessment: TechAssessment, vertical: LegendVerticalOffset) => string,
     verticalOffset: (quadrant: Quadrant, assessment: TechAssessment) => LegendVerticalOffsetConfig,

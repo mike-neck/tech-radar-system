@@ -1,5 +1,5 @@
 import {Config} from "./config";
-import {EntryClassification, Technology, TechnologyWithIndex, Trend} from "./entry-classification";
+import {EntryClassification, Technology, Trend, ViewableTech} from "./entry-classification";
 import {Cartesian} from "./figure-types";
 import React, {ReactElement} from "react";
 import {translateCartesian} from "./transform-translate";
@@ -8,7 +8,7 @@ import {translateCartesian} from "./transform-translate";
 export function Blips(
     params: {
         config: Config,
-        entries: EntryClassification<TechnologyWithIndex>,
+        entries: EntryClassification<ViewableTech>,
         position: (tech: Technology) => Cartesian,
     }): ReactElement {
     const config = params.config;
@@ -27,7 +27,7 @@ export function Blips(
 function Blip(
     params: {
         config: Config,
-        tech: TechnologyWithIndex,
+        tech: ViewableTech,
         position: (tech: Technology) => Cartesian,
     }): ReactElement {
     const config = params.config;
@@ -43,7 +43,7 @@ function Blip(
     );
 }
 
-function BlipShape(params: { config: Config, tech: TechnologyWithIndex }): ReactElement {
+function BlipShape(params: { config: Config, tech: ViewableTech }): ReactElement {
     const config = params.config;
     const tech = params.tech;
     const color = config.color(tech);
@@ -57,7 +57,7 @@ function BlipShape(params: { config: Config, tech: TechnologyWithIndex }): React
     }
 }
 
-function BlipText(params: { config: Config, tech: TechnologyWithIndex }): ReactElement | null {
+function BlipText(params: { config: Config, tech: ViewableTech }): ReactElement | null {
     const config = params.config;
     const tech = params.tech;
     if (tech.active || config.printLayout) {

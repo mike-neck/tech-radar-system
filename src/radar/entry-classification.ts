@@ -15,7 +15,7 @@ export interface Technology {
     move: Trend;
 }
 
-export interface TechnologyWithIndex extends Technology {
+export interface ViewableTech extends Technology {
     index: string;
 }
 
@@ -95,17 +95,17 @@ function appendNewEntryToTechAssessment(
     }
 }
 
-function sortAndGiveIndex(previous: number, technologies: Technology[]): [number, TechnologyWithIndex[]] {
+function sortAndGiveIndex(previous: number, technologies: Technology[]): [number, ViewableTech[]] {
     technologies.sort((left, right) => left.name.localeCompare(right.name));
     const index = [previous];
-    const withId: TechnologyWithIndex[] = technologies.map(tech => ({
+    const withId: ViewableTech[] = technologies.map(tech => ({
         ...tech, index: `${++index[0]}`
-    }) as TechnologyWithIndex);
+    }) as ViewableTech);
     return [index[0], withId];
 }
 
 function sortByName(
-    previous: number, byTechAssessment: ByTechAssessment<Technology>): [number, ByTechAssessment<TechnologyWithIndex>] {
+    previous: number, byTechAssessment: ByTechAssessment<Technology>): [number, ByTechAssessment<ViewableTech>] {
     const [adoptIndex, adopt] = sortAndGiveIndex(previous, byTechAssessment.adopt);
     const [trialIndex, trial] = sortAndGiveIndex(adoptIndex, byTechAssessment.trial);
     const [assessIndex, assess] = sortAndGiveIndex(trialIndex, byTechAssessment.assess);
@@ -207,7 +207,7 @@ export function grouping(technologies: Technology[]): EntryClassification<Techno
     return technologies.reduce(gp, newSegmentedEntries());
 }
 
-export function sortingByNameGivingIndex(entries: EntryClassification<Technology>): EntryClassification<TechnologyWithIndex> {
+export function sortingByNameGivingIndex(entries: EntryClassification<Technology>): EntryClassification<ViewableTech> {
     const [secondIndex, second] = sortByName(0, entries.second);
     const [firstIndex, first] = sortByName(secondIndex, entries.first);
     const [thirdIndex, third] = sortByName(firstIndex, entries.third);
