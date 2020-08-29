@@ -3,6 +3,7 @@ import {translateOffset} from "./transform-translate";
 import {ViewableTech} from "./entry-classification";
 
 export type BubbleLabel = {
+    index: string,
     x: number,
     y: number,
     text: string,
@@ -12,6 +13,7 @@ export function newBubbleLabel(tech: ViewableTech): BubbleLabel {
     const cartesian = tech.cart;
     return {
         ...cartesian,
+        index: tech.index,
         text: `${tech.index} ${tech.name}`,
     };
 }

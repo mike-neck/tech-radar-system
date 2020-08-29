@@ -183,6 +183,7 @@ function Figure(params: { config: Config, entries: EntryClassification<ViewableT
         <Legend
             config={params.config}
             entries={params.entries}
+            bubbling={bubbleLabel?.index}
             techSelected={techSelected}
             techUnselected={techUnselected}
         />

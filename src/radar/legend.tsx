@@ -8,7 +8,7 @@ import {
     Offset,
     quadrantLegendOffset
 } from "./offset";
-import React, {ReactElement, useState} from "react";
+import React, {ReactElement} from "react";
 import {EntryClassification, ViewableTech} from "./entry-classification";
 import {Config} from "./config";
 import {translateOffset} from "./transform-translate";
@@ -17,11 +17,11 @@ export function Legend(
     params: {
         config: Config,
         entries: EntryClassification<ViewableTech>,
+        bubbling: string | undefined,
         techSelected: (tech: ViewableTech) => void,
         techUnselected: () => void,
     }): ReactElement {
-    const {config, entries, techSelected, techUnselected} = params;
-
+    const {config, entries, bubbling, techSelected, techUnselected} = params;
     const verticalOffset = legendVerticalOffset(entries);
 
     function legendTransform(quadrant: Quadrant, assessment: TechAssessment, vertical: LegendVerticalOffset): string {
@@ -41,6 +41,7 @@ export function Legend(
                 entries={entries}
                 legendTransform={legendTransform}
                 verticalOffset={verticalOffset}
+                bubbling={bubbling}
                 techSelected={techSelected}
                 techUnselected={techUnselected}
             />
@@ -94,10 +95,11 @@ function ItemNames(params: {
     entries: EntryClassification<ViewableTech>,
     legendTransform: (quadrant: Quadrant, assessment: TechAssessment, vertical: LegendVerticalOffset) => string,
     verticalOffset: (quadrant: Quadrant, assessment: TechAssessment) => LegendVerticalOffsetConfig,
+    bubbling: string | undefined,
     techSelected: (tech: ViewableTech) => void,
     techUnselected: () => void,
 }): ReactElement {
-    const {entries, legendTransform, verticalOffset, techSelected, techUnselected} = params;
+    const {entries, legendTransform, verticalOffset, bubbling, techSelected, techUnselected} = params;
     return (<>{
         entries
             .mapAsArray((item, allIndex, indexInQuadrants, indexInAssessments) =>
@@ -107,6 +109,7 @@ function ItemNames(params: {
                     indexInAssessments={indexInAssessments}
                     legendTransform={legendTransform}
                     verticalOffset={verticalOffset}
+                    mouseOver={ bubbling === undefined? false: bubbling === item.index }
                     techSelected={techSelected}
                     techUnselected={techUnselected}
                 />))
@@ -118,18 +121,16 @@ function ItemName(params: {
     indexInAssessments: number,
     legendTransform: (quadrant: Quadrant, assessment: TechAssessment, vertical: LegendVerticalOffset) => string,
     verticalOffset: (quadrant: Quadrant, assessment: TechAssessment) => LegendVerticalOffsetConfig,
+    mouseOver: boolean,
     techSelected: (tech: ViewableTech) => void,
     techUnselected: () => void,
 }): ReactElement {
-    const {item, indexInAssessments, legendTransform, verticalOffset, techSelected, techUnselected} = params;
-    const [mouseOver, setMouseOver] = useState(false);
+    const {item, indexInAssessments, legendTransform, verticalOffset, mouseOver, techSelected, techUnselected} = params;
 
     const mouseOverHandler = () => {
-        setMouseOver(true);
         techSelected(item);
     };
     const mouseOutHandler = () => {
-        setMouseOver(false);
         techUnselected();
     };
 
