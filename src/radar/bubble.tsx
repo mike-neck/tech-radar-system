@@ -1,12 +1,20 @@
 import React, {useEffect, useRef, useState} from "react";
 import {translateOffset} from "./transform-translate";
+import {ViewableTech} from "./entry-classification";
 
-type BubbleLabel = {
-    index: number,
+export type BubbleLabel = {
     x: number,
     y: number,
     text: string,
 };
+
+export function newBubbleLabel(tech: ViewableTech): BubbleLabel {
+    const cartesian = tech.cart;
+    return {
+        ...cartesian,
+        text: `${tech.index} ${tech.name}`,
+    };
+}
 
 type BubbleAttr = {
     x: number,
@@ -64,6 +72,12 @@ export function Bubble(props: { label: BubbleLabel | null }) {
                 height: bBox.height + 4,
             });
             setPathTransform(translateOffset({x: bBox.width / 2 - 5, y: 3}));
+        } else {
+            setBubbleAttr({
+                ...bubbleAttr,
+                opacity: 0,
+                transform: "translate(0,0)"
+            });
         }
     }, [label]);
 

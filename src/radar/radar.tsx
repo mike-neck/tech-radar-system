@@ -14,7 +14,7 @@ import {cartesian, Cartesian, polar, Polar, PolarRange, polarRange, Radius, Rect
 import {translateArea, translateOffset} from "./transform-translate";
 import {Colors, Config, newConfig, RadarConfig} from "./config";
 import {Legend} from "./legend";
-import {Bubble, BubbleLabel} from "./bubble";
+import {Bubble, BubbleLabel, newBubbleLabel} from "./bubble";
 import {Blips} from "./blips";
 
 type RadialUnit = -1 | -0.5 | 0 | 0.5 | 1;
@@ -139,7 +139,7 @@ function position(tech: Technology): Cartesian {
 
 function model(technologies: Technology[]): EntryClassification<ViewableTech> {
     const grp = grouping(technologies);
-    return sortingByNameGivingIndex(grp);
+    return sortingByNameGivingIndex(position, grp);
 }
 
 export function Radar(params: { radarConfig: RadarConfig, technologies: Technology[] }): ReactElement {
@@ -170,16 +170,32 @@ function Figure(params: { config: Config, entries: EntryClassification<ViewableT
     const guide = (<Guide/>);
 
     const [bubbleLabel, setBubbleLabel] = useState<BubbleLabel | null>(null);
+    const techSelected: (tech: ViewableTech) => void = (tech) => {
+        const newLabel = newBubbleLabel(tech);
+        setBubbleLabel(newLabel);
+    };
+    const techUnselected: () => void = () => {
+        setBubbleLabel(null);
+    };
 
     // add legend for items
-    const legend = (<Legend config={params.config} entries={params.entries}/>);
+    const legend = (
+        <Legend
+            config={params.config}
+            entries={params.entries}
+            techSelected={techSelected}
+            techUnselected={techUnselected}
+        />
+    );
     // add bubble(tooltip/handler)
     const bubble = (<Bubble label={bubbleLabel}/>);
     // add rink(plots = blips)
     const blips = (<Blips
         config={params.config}
         entries={params.entries}
-        position={position}/>);
+        techSelected={techSelected}
+        techUnselected={techUnselected}
+    />);
     return (
         <g>
             { grid }

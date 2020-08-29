@@ -13,9 +13,14 @@ import {EntryClassification, ViewableTech} from "./entry-classification";
 import {Config} from "./config";
 import {translateOffset} from "./transform-translate";
 
-export function Legend(params: { config: Config, entries: EntryClassification<ViewableTech> }): ReactElement {
-    const config = params.config;
-    const entries = params.entries;
+export function Legend(
+    params: {
+        config: Config,
+        entries: EntryClassification<ViewableTech>,
+        techSelected: (tech: ViewableTech) => void,
+        techUnselected: () => void,
+    }): ReactElement {
+    const {config, entries, techSelected, techUnselected} = params;
 
     const verticalOffset = legendVerticalOffset(entries);
 
@@ -32,7 +37,13 @@ export function Legend(params: { config: Config, entries: EntryClassification<Vi
         <g>
             <QuadrantTitle config={config}/>
             <TechAssessmentTitle legendTransform={legendTransform} verticalOffset={verticalOffset}/>
-            <ItemNames entries={entries} legendTransform={legendTransform} verticalOffset={verticalOffset}/>
+            <ItemNames
+                entries={entries}
+                legendTransform={legendTransform}
+                verticalOffset={verticalOffset}
+                techSelected={techSelected}
+                techUnselected={techUnselected}
+            />
         </g>
     );
 }
@@ -83,16 +94,22 @@ function ItemNames(params: {
     entries: EntryClassification<ViewableTech>,
     legendTransform: (quadrant: Quadrant, assessment: TechAssessment, vertical: LegendVerticalOffset) => string,
     verticalOffset: (quadrant: Quadrant, assessment: TechAssessment) => LegendVerticalOffsetConfig,
+    techSelected: (tech: ViewableTech) => void,
+    techUnselected: () => void,
 }): ReactElement {
+    const {entries, legendTransform, verticalOffset, techSelected, techUnselected} = params;
     return (<>{
-        params.entries
+        entries
             .mapAsArray((item, allIndex, indexInQuadrants, indexInAssessments) =>
                 (<ItemName
                     key={ `item-legend-${item.quadrant}-${item.assessment}` }
                     item={item}
                     indexInAssessments={indexInAssessments}
-                    legendTransform={params.legendTransform}
-                    verticalOffset={params.verticalOffset}/>))
+                    legendTransform={legendTransform}
+                    verticalOffset={verticalOffset}
+                    techSelected={techSelected}
+                    techUnselected={techUnselected}
+                />))
     }</>);
 }
 
@@ -101,25 +118,29 @@ function ItemName(params: {
     indexInAssessments: number,
     legendTransform: (quadrant: Quadrant, assessment: TechAssessment, vertical: LegendVerticalOffset) => string,
     verticalOffset: (quadrant: Quadrant, assessment: TechAssessment) => LegendVerticalOffsetConfig,
+    techSelected: (tech: ViewableTech) => void,
+    techUnselected: () => void,
 }): ReactElement {
-    const item = params.item;
+    const {item, indexInAssessments, legendTransform, verticalOffset, techSelected, techUnselected} = params;
     const [mouseOver, setMouseOver] = useState(false);
 
     const mouseOverHandler = () => {
         setMouseOver(true);
+        techSelected(item);
     };
     const mouseOutHandler = () => {
         setMouseOver(false);
+        techUnselected();
     };
 
     if (mouseOver) {
         return (<text
             key={`legend-guide-${item.quadrant}-${item.assessment}-${item.name}`}
             transform={
-                params.legendTransform(
+                legendTransform(
                     item.quadrant, item.assessment,
-                    params.verticalOffset(item.quadrant, item.assessment)
-                        .lengthAt(params.indexInAssessments))
+                    verticalOffset(item.quadrant, item.assessment)
+                        .lengthAt(indexInAssessments))
             }
             className={`legend-${item.quadrant}-${item.assessment}`}
             id={`legend-${item.index}`}
@@ -135,10 +156,10 @@ function ItemName(params: {
         return (<text
             key={`legend-guide-${item.quadrant}-${item.assessment}-${item.name}`}
             transform={
-                params.legendTransform(
+                legendTransform(
                     item.quadrant, item.assessment,
-                    params.verticalOffset(item.quadrant, item.assessment)
-                        .lengthAt(params.indexInAssessments))
+                    verticalOffset(item.quadrant, item.assessment)
+                        .lengthAt(indexInAssessments))
             }
             className={`legend-${item.quadrant}-${item.assessment}`}
             id={`legend-${item.index}`}

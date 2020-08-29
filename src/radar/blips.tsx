@@ -1,6 +1,5 @@
 import {Config} from "./config";
-import {EntryClassification, Technology, Trend, ViewableTech} from "./entry-classification";
-import {Cartesian} from "./figure-types";
+import {EntryClassification, Trend, ViewableTech} from "./entry-classification";
 import React, {ReactElement} from "react";
 import {translateCartesian} from "./transform-translate";
 
@@ -9,16 +8,20 @@ export function Blips(
     params: {
         config: Config,
         entries: EntryClassification<ViewableTech>,
-        position: (tech: Technology) => Cartesian,
+        techSelected: (tech: ViewableTech) => void,
+        techUnselected: () => void,
     }): ReactElement {
-    const config = params.config;
-    const entries = params.entries;
-    const position = params.position;
+    const {config, entries, techSelected, techUnselected} = params;
 
     return (
         <g>
             {entries.mapAsArray(item => {
-                return (<Blip key={item.index} config={config} tech={item} position={position}/>);
+                return (<Blip
+                    key={item.index}
+                    config={config} tech={item}
+                    techSelected={techSelected}
+                    techUnselected={techUnselected}
+                />);
             })}
         </g>
     );
@@ -28,15 +31,16 @@ function Blip(
     params: {
         config: Config,
         tech: ViewableTech,
-        position: (tech: Technology) => Cartesian,
+        techSelected: (tech: ViewableTech) => void,
+        techUnselected: () => void,
     }): ReactElement {
-    const config = params.config;
-    const tech = params.tech;
-    const position = params.position;
-    const cart = position(tech);
+    const {config, tech, techSelected, techUnselected} = params;
+    const cart = tech.cart;
 
     return (
-        <g transform={translateCartesian(cart)}>
+        <g transform={translateCartesian(cart)}
+           onMouseOver={ (e) => techSelected(tech) }
+           onMouseOut={ (e) => techUnselected() }>
             <BlipShape config={config} tech={tech}/>
             <BlipText config={config} tech={tech}/>
         </g>
@@ -44,8 +48,7 @@ function Blip(
 }
 
 function BlipShape(params: { config: Config, tech: ViewableTech }): ReactElement {
-    const config = params.config;
-    const tech = params.tech;
+    const {config, tech} = params;
     const color = config.color(tech);
     switch (tech.move) {
         case Trend.UP:

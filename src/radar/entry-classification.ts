@@ -1,5 +1,6 @@
 import {Quadrant, QuadrantAccess} from "./quadrant";
 import {TechAssessment} from "./tech-assessment";
+import {Cartesian} from "./figure-types";
 
 export enum Trend {
     UP,
@@ -17,6 +18,7 @@ export interface Technology {
 
 export interface ViewableTech extends Technology {
     index: string;
+    cart: Cartesian;
 }
 
 export type ByTechAssessment<T> = {
@@ -95,21 +97,25 @@ function appendNewEntryToTechAssessment(
     }
 }
 
-function sortAndGiveIndex(previous: number, technologies: Technology[]): [number, ViewableTech[]] {
+function sortAndGiveIndex(previous: number, position: (tech: Technology) => Cartesian, technologies: Technology[]): [number, ViewableTech[]] {
     technologies.sort((left, right) => left.name.localeCompare(right.name));
     const index = [previous];
     const withId: ViewableTech[] = technologies.map(tech => ({
-        ...tech, index: `${++index[0]}`
-    }) as ViewableTech);
+        ...tech,
+        cart: position(tech),
+        index: `${++index[0]}`
+    }));
     return [index[0], withId];
 }
 
 function sortByName(
-    previous: number, byTechAssessment: ByTechAssessment<Technology>): [number, ByTechAssessment<ViewableTech>] {
-    const [adoptIndex, adopt] = sortAndGiveIndex(previous, byTechAssessment.adopt);
-    const [trialIndex, trial] = sortAndGiveIndex(adoptIndex, byTechAssessment.trial);
-    const [assessIndex, assess] = sortAndGiveIndex(trialIndex, byTechAssessment.assess);
-    const [holdIndex, hold] = sortAndGiveIndex(assessIndex, byTechAssessment.hold);
+    previous: number,
+    position: (tech: Technology) => Cartesian,
+    byTechAssessment: ByTechAssessment<Technology>): [number, ByTechAssessment<ViewableTech>] {
+    const [adoptIndex, adopt] = sortAndGiveIndex(previous, position, byTechAssessment.adopt);
+    const [trialIndex, trial] = sortAndGiveIndex(adoptIndex, position, byTechAssessment.trial);
+    const [assessIndex, assess] = sortAndGiveIndex(trialIndex, position, byTechAssessment.assess);
+    const [holdIndex, hold] = sortAndGiveIndex(assessIndex, position, byTechAssessment.hold);
     return [
         holdIndex,
         new ByTechAssessmentImpl(adopt, trial, assess, hold)
@@ -207,10 +213,12 @@ export function grouping(technologies: Technology[]): EntryClassification<Techno
     return technologies.reduce(gp, newSegmentedEntries());
 }
 
-export function sortingByNameGivingIndex(entries: EntryClassification<Technology>): EntryClassification<ViewableTech> {
-    const [secondIndex, second] = sortByName(0, entries.second);
-    const [firstIndex, first] = sortByName(secondIndex, entries.first);
-    const [thirdIndex, third] = sortByName(firstIndex, entries.third);
-    const [fin, fourth] = sortByName(thirdIndex, entries.fourth);
+export function sortingByNameGivingIndex(
+    position: (tech: Technology) => Cartesian,
+    entries: EntryClassification<Technology>): EntryClassification<ViewableTech> {
+    const [secondIndex, second] = sortByName(0, position, entries.second);
+    const [firstIndex, first] = sortByName(secondIndex, position, entries.first);
+    const [thirdIndex, third] = sortByName(firstIndex, position, entries.third);
+    const [fin, fourth] = sortByName(thirdIndex, position, entries.fourth);
     return new EntryClassificationImpl(first, second, third, fourth);
 }
