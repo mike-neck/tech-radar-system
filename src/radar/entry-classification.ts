@@ -219,6 +219,6 @@ export function sortingByNameGivingIndex(
     const [secondIndex, second] = sortByName(0, position, entries.second);
     const [firstIndex, first] = sortByName(secondIndex, position, entries.first);
     const [thirdIndex, third] = sortByName(firstIndex, position, entries.third);
-    const [fin, fourth] = sortByName(thirdIndex, position, entries.fourth);
+    const [, fourth] = sortByName(thirdIndex, position, entries.fourth);
     return new EntryClassificationImpl(first, second, third, fourth);
 }
